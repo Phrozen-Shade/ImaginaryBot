@@ -1,17 +1,19 @@
 package com.example.imaginarybot.service;
 
 import com.example.imaginarybot.configuration.BotConfig;
+import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-
+@AllArgsConstructor
 @Service
 public class ImaginaryBotService extends TelegramLongPollingBot {
     final BotConfig config;
 
+    @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
         if(update.hasMessage() && update.getMessage().hasText()){
@@ -21,16 +23,8 @@ public class ImaginaryBotService extends TelegramLongPollingBot {
             SendMessage.SendMessageBuilder messageBuilder = SendMessage.builder();
             messageBuilder.chatId(chatId).text(messageText);
 
-            try {
-                execute(messageBuilder.build());
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            execute(messageBuilder.build());
         }
-    }
-
-    public ImaginaryBotService(BotConfig config) {
-        this.config = config;
     }
 
     @Override
